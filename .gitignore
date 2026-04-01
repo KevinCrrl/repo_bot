@@ -1,0 +1,4 @@
+*.json*
+*.toml
+__pycache__/
+*.txt
