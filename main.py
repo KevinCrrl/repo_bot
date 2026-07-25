@@ -15,6 +15,7 @@ limitations under the License.
 
 """
 
+import argparse
 import json
 import os
 import sys
@@ -22,12 +23,23 @@ import repo_bot as rb
 
 
 def main():
+    parser = argparse.ArgumentParser(
+        prog="RepoBot",
+        description="Update PKGBUILDs automatically",
+        epilog="RepoBot - Copyright (C) 2026 KevinCrrl; Apache 2.0 License")
+
+    parser.add_argument("repopath", help="Path to the repository containing the PKGBUILDs")
+    parser.add_argument("logdest", help="Path to save the log")
+    parser.add_argument("-o", "--nobuild", action="store_true",
+                        help="Skip the build test")
+
+    args = parser.parse_args()
     log = ""
 
     # Paths
     current = os.getcwd()
     try:
-        repo = sys.argv[1]
+        repo = args.repopath
     except IndexError:
         repo = input(">> Input the repo path: ")
 
@@ -40,11 +52,11 @@ def main():
         content = json.load(file)
 
     for package, data in content["data"].items():
-        if rb.update_pkgbuild(package, data, repo):
+        if rb.update_pkgbuild(package, data, repo, args.nobuild):
             log += f"{package}\n"
 
     try:
-        log_dest = sys.argv[2]
+        log_dest = args.logdest
     except IndexError:
         log_dest = "repo_bot_log.txt"
 

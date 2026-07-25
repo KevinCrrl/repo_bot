@@ -31,7 +31,7 @@ def init_nvc():
             print(f">> ERROR: {e}")
 
 
-def update_pkgbuild(package: str, pdata: dict, repo: str) -> bool:
+def update_pkgbuild(package: str, pdata: dict, repo: str, nobuild: bool) -> bool:
     os.chdir(os.path.join(repo, package))
     pkg = pp.Parser()
     # Get PKGBUILD version
@@ -53,7 +53,8 @@ def update_pkgbuild(package: str, pdata: dict, repo: str) -> bool:
             pkg_content.truncate()
             try:
                 sb.run(["updpkgsums"], shell=False, check=True)
-                sb.run(["makepkg", "-s"], shell=False, check=True)
+                if not nobuild:
+                    sb.run(["makepkg", "-s", "--noconfirm", "--needed", "--clean"], shell=False, check=True)
             except sb.CalledProcessError as e:
                 print(f"ERROR: {e}\nAborting!")
                 pkg_content.seek(0)

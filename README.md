@@ -4,8 +4,14 @@ Bot for update PKGBUILDs using `nvchecker` and `pkgbuild-parser`.
 
 ## Usage
 
+```bash
+$ python main.py <repopath> <logdest>
 ```
-$ python main.py <repo_path> <log_dest>
+
+See the help for more information:
+
+```bash
+$ python main.py --help
 ```
 
 repo_path: folder with the PKGBUILD following this structure:
